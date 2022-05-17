@@ -248,10 +248,14 @@ void Shader::CreateComputeShader(const wstring& path, const string& name, const 
 
 void Shader::Update()
 {
-	if (GetShaderType() != SHADER_TYPE::COMPUTE)
+	if (GetShaderType() == SHADER_TYPE::COMPUTE)
 	{
 
-
+		DEVICECONTEXT->CSSetShader(_computeShader, NULL, 0);
+		
+	}
+	else
+	{
 		DEVICECONTEXT->VSSetShader(_vertexShader, NULL, 0);
 		DEVICECONTEXT->PSSetShader(_pixelShader, NULL, 0);
 		DEVICECONTEXT->PSSetSamplers(0, 1, &_samplerState);

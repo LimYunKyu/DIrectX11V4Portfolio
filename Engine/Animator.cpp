@@ -32,13 +32,17 @@ void Animator::FinalUpdate()
 	_frameRatio = static_cast<float>(_frame - _frame);
 }
 
-void Animator::SetAnimClip(const vector<AnimClipInfo>* animClips)
+void Animator::SetAnimClip(vector<AnimClipInfo>* animClips)
 {
 	_animClips = animClips;
 }
 
 void Animator::PushData()
 {
+
+
+	_computeMaterial->GetShader()->Update();
+
 	uint32 boneCount = static_cast<uint32>(_bones->size());
 	if (_boneFinalMatrix->GetElementCount() < boneCount)
 		_boneFinalMatrix->Init(sizeof(Matrix), boneCount);
@@ -57,7 +61,11 @@ void Animator::PushData()
 
 	uint32 groupCount = (boneCount / 256) + 1;
 	_computeMaterial->Dispatch(groupCount, 1, 1);
+	_boneFinalMatrix->ClearUAVData(UAV_REGISTER::u0);
 
+	shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+
+	shader->Update();
 	// Graphics Shader
 	_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);
 }

@@ -14,8 +14,10 @@ public:
 
 public:
 	void SetBones(const vector<BoneInfo>* bones) { _bones = bones; }
-	void SetAnimClip(const vector<AnimClipInfo>* animClips);
+	void SetAnimClip(vector<AnimClipInfo>* animClips);
 	void PushData();
+
+	vector<AnimClipInfo>* GetAnimClips() { return _animClips; }
 
 	int32 GetAnimCount() { return static_cast<uint32>(_animClips->size()); }
 	int32 GetCurrentClipIndex() { return _clipIndex; }
@@ -26,7 +28,7 @@ public:
 
 private:
 	const vector<BoneInfo>* _bones;
-	const vector<AnimClipInfo>* _animClips;
+	vector<AnimClipInfo>* _animClips;
 
 	float							_updateTime = 0.f;
 	int32							_clipIndex = 0;

@@ -70,7 +70,7 @@ Texture2D g_tex_2 : register(t2);
 Texture2D g_tex_3 : register(t3);
 Texture2D g_tex_4 : register(t4);
 
-StructuredBuffer<Matrix> g_mat_bone : register(t7);
+StructuredBuffer<matrix> g_mat_bone : register(t7);
 
 SamplerState g_sam_0 : register(s0);
 

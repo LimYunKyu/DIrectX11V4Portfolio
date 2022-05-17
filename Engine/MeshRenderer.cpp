@@ -35,15 +35,21 @@ void MeshRenderer::Render()
 		if (material == nullptr || material->GetShader() == nullptr)
 			continue;
 
-		material->PushGraphicsData();
-		GetTransform()->PushData();
+		/*material->PushGraphicsData();
+		GetTransform()->PushData();*/
 
 		if (GetAnimator())
 		{
 			GetAnimator()->PushData();
 			material->SetInt(1, 1);
 		}
+		else
+		{
+			material->GetShader()->Update();
+		}
 
+		material->PushGraphicsData();
+		GetTransform()->PushData();
 		
 		_mesh->Render(1, i);
 	}
@@ -63,7 +69,11 @@ void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)
 		if (GetAnimator())
 		{
 			GetAnimator()->PushData();
-			material->SetInt(1, 1);
+			//material->SetInt(1, 1);
+		}
+		else
+		{
+			material->GetShader()->Update();
 		}
 
 		material->PushGraphicsData();
@@ -73,7 +83,8 @@ void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)
 
 void MeshRenderer::RenderShadow()
 {
-	
+	// 파이프라인 세팅
+	GET_SINGLE(Resources)->Get<Material>(L"Shadow")->GetShader()->Update();
 	GET_SINGLE(Resources)->Get<Material>(L"Shadow")->PushGraphicsData();
 	GetTransform()->PushData();
 	_mesh->Render();

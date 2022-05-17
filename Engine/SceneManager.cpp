@@ -9,6 +9,7 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "Light.h"
+#include "Animator.h"
 
 #include "TestCameraScript.h"
 #include "Resources.h"
@@ -125,25 +126,27 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 	shared_ptr<Scene> scene = make_shared<Scene>();
 	GET_SINGLE(Resources)->LoadRectangleMesh();
-//#pragma region ComputeShader
-//	{
-//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
-//
-//		// UAV 용 Texture 생성
-//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->CreateTexture(L"UAVTexture",
-//			DXGI_FORMAT_R8G8B8A8_UNORM, 1024, 1024,D3D11_BIND_UNORDERED_ACCESS, D3D11_USAGE::D3D11_USAGE_DEFAULT);
-//
-//		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"ComputeShader");
-//		material->SetShader(shader);
-//		material->SetInt(0, 1);
-//		auto uav = texture->GetUAV();
-//		
-//		GET_SINGLE(BufferManager)->PushComputeUAV(UAV_REGISTER::u0, uav);
-//		
-//		// 쓰레드 그룹 (1 * 1024 * 1)
-//		material->Dispatch(1, 1024, 1);
-//	}
-//#pragma endregion
+#pragma region ComputeShader
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
+
+		 //UAV 용 Texture 생성
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->CreateTexture(L"UAVTexture",
+			DXGI_FORMAT_R8G8B8A8_UNORM, 1024, 1024,D3D11_BIND_UNORDERED_ACCESS, D3D11_USAGE::D3D11_USAGE_DEFAULT);
+
+		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"ComputeShader");
+		material->SetShader(shader);
+		material->SetInt(0, 1);
+		material->SetTexture(0, texture);
+		
+		auto uav = texture->GetUAV();
+		material->GetShader()->Update();
+		GET_SINGLE(BufferManager)->PushComputeUAV(UAV_REGISTER::u0, uav);
+		
+		// 쓰레드 그룹 (1 * 1024 * 1)
+		material->Dispatch(1, 1024, 1);
+	}
+#pragma endregion
 //
 //	shared_ptr<Scene> scene = make_shared<Scene>();
 //
@@ -207,7 +210,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->AddComponent(make_shared<Transform>());
 		obj->AddComponent(make_shared<SphereCollider>());
 		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0, 0.f, 100.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(100, 0.f, 100.f));
 		obj->SetStatic(false);
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -264,7 +267,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			else if (i < 5)
 				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->GetRTTexture(i - 3);
 			else
-				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
+				texture = GET_SINGLE(Resources)->Get<Texture>(L"UAVTexture");
+				//texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
 
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
@@ -291,25 +295,30 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		scene->AddGameObject(light);
 	}
 #pragma endregion
-//
-//
-//#pragma region FBX
-//	{
-//		/*shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_IDLE.fbx");
-//
-//		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-//
-//		for (auto& gameObject : gameObjects)
-//		{
-//			gameObject->SetName(L"Dragon");
-//			gameObject->SetCheckFrustum(false);
-//			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 300.f));
-//			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-//			scene->AddGameObject(gameObject);
-//			gameObject->AddComponent(make_shared<TestDragon>());
-//		}*/
-//	}
-//#pragma endregion
+
+
+#pragma region FBX
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_IDLE.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		auto MainObject = gameObjects[0];
+		auto vecAnimClips =  MainObject->GetAnimator()->GetAnimClips();
+		shared_ptr<MeshData> OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_Run.fbx");
+		OtherData->AddAnimTake(MainObject);
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Dragon");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 300.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			scene->AddGameObject(gameObject);
+			gameObject->AddComponent(make_shared<TestDragon>());
+		}
+	}
+#pragma endregion
 
 	return scene;
 }

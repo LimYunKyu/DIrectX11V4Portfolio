@@ -57,11 +57,13 @@ public:
 	uint32 GetSubsetCount() { return static_cast<uint32>(_vecIndexInfo.size()); }
 	const vector<BoneInfo>* GetBones() { return &_bones; }
 	uint32						GetBoneCount() { return static_cast<uint32>(_bones.size()); }
-	const vector<AnimClipInfo>* GetAnimClip() { return &_animClips; }
+	vector<AnimClipInfo>* GetAnimClip() { return &_animClips; }
 
 	bool							IsAnimMesh() { return !_animClips.empty(); }
 	shared_ptr<StructuredBuffer>	GetBoneFrameDataBuffer(int32 index = 0) { return _frameBuffer[index]; } // 전체 본 프레임 정보
 	shared_ptr<StructuredBuffer>	GetBoneOffsetBuffer() { return  _offsetBuffer; }
+	void AddBoneFrameBuffer(shared_ptr<StructuredBuffer> buffer) { _frameBuffer.push_back(buffer); }
+	
 
 private:
 	ID3D11Buffer*				_vertexBuffer;

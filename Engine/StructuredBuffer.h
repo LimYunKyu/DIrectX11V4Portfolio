@@ -12,6 +12,7 @@ public:
 	void PushComputeSRVData(SRV_REGISTER reg);
 	void PushComputeUAVData(UAV_REGISTER reg);
 	
+	void ClearUAVData(UAV_REGISTER reg);
 
 	ID3D11ShaderResourceView*	 GetSRV() { return _srv; }
 	ID3D11UnorderedAccessView*	 GetUAV() { return _uav; }

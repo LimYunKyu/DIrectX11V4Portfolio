@@ -18,8 +18,8 @@ Material::~Material()
 void Material::PushGraphicsData()
 {
 
-	// 파이프라인 세팅
-	_shader->Update();
+	//// 파이프라인 세팅
+	//_shader->Update();
 
 	// CBV 업로드
 	CONST_BUFFER(CONSTANT_BUFFER_TYPE::MATERIAL)->PushGraphicsData(&_params, sizeof(_params));
@@ -40,10 +40,8 @@ void Material::PushGraphicsData()
 
 void Material::PushComputeData()
 {
-	// CBV 업로드
-	CONST_BUFFER(CONSTANT_BUFFER_TYPE::MATERIAL)->PushComputeData(&_params, sizeof(_params));
 
-	// SRV 업로드
+	
 	for (size_t i = 0; i < _textures.size(); i++)
 	{
 		if (_textures[i] == nullptr)
@@ -51,11 +49,16 @@ void Material::PushComputeData()
 
 		SRV_REGISTER reg = SRV_REGISTER(static_cast<int8>(SRV_REGISTER::t0) + i);
 		GET_SINGLE(BufferManager)->PushComputeSRV(reg, _textures[i]->GetSRV());
+
+	
+
+		GET_SINGLE(BufferManager)->PushComputeUAV(UAV_REGISTER::u0, _textures[i]->GetUAV());
 		
 	}
 
-	// 파이프라인 세팅
-	_shader->Update();
+	// CBV 업로드
+	CONST_BUFFER(CONSTANT_BUFFER_TYPE::MATERIAL)->PushComputeData(&_params, sizeof(_params));
+	
 }
 
 void Material::Dispatch(uint32 x, uint32 y, uint32 z)

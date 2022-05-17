@@ -46,6 +46,37 @@ shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 	return meshData;
 }
 
+void MeshData::AddAnimTake(shared_ptr<GameObject> MainGameObject)
+{
+	
+	auto MainAnimator = MainGameObject->GetAnimator();
+	auto MainMesh = MainAnimator->GetMeshRenderer()->GetMesh();
+	
+
+	auto Animclip = MainMesh->GetAnimClip();
+
+	for (MeshRenderInfo& info : _meshRenders)
+	{
+		
+		if (info.mesh->IsAnimMesh())
+		{
+			
+			auto pAnimTakeVec = (info.mesh->GetAnimClip());
+			auto AnimTake = (*pAnimTakeVec)[0];
+			//vecAnimClipInfo->push_back(AnimTake);
+
+			Animclip->push_back(AnimTake);
+			MainMesh->AddBoneFrameBuffer(info.mesh->GetBoneFrameDataBuffer(0));
+
+
+		}
+	
+	}
+
+
+
+}
+
 void MeshData::Load(const wstring& _strFilePath)
 {
 	// TODO
@@ -76,6 +107,13 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 			gameObject->AddComponent(animator);
 			animator->SetBones(info.mesh->GetBones());
 			animator->SetAnimClip(info.mesh->GetAnimClip());
+
+
+		/*	auto pAnimTakeVec = (info.mesh->GetAnimClip());
+			auto AnimTake = (*pAnimTakeVec)[0];
+			pAnimTakeVec->push_back(AnimTake);*/
+			
+
 		}
 
 		v.push_back(gameObject);

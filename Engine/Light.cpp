@@ -38,7 +38,7 @@ void Light::FinalUpdate()
 
 void Light::Render()
 {
-	//assert(_lightIndex >= 0);
+	assert(_lightIndex >= 0);
 
 	
 
@@ -57,11 +57,10 @@ void Light::Render()
 	}
 
 	_lightMaterial->SetInt(0, _lightIndex);
+	_lightMaterial->GetShader()->Update();
 	_lightMaterial->PushGraphicsData();
 
 	auto scene = GET_SINGLE(SceneManager)->GetActiveScene();
-
-	//scene->PushLightData();
 
 
 	GetTransform()->PushData();

@@ -39,8 +39,27 @@ void Texture::Load(const wstring& path)
 		hr = LoadFromWICFile(path.c_str(), WIC_FLAGS_NONE, nullptr, image);
 	}
 
+	TexMetadata meta = image.GetMetadata();
 
-
+	/*
+	size_t          width;
+	size_t          height;   
+	size_t          depth;    
+	size_t          arraySize;
+	size_t          mipLevels;
+	uint32_t        miscFlags;
+	uint32_t        miscFlags2
+	DXGI_FORMAT     format;
+	TEX_DIMENSION   dimension;
+	*/
+	_desc.Format = meta.format;
+	_desc.Width = meta.width;
+	_desc.Height = meta.height;
+	_desc.ArraySize = meta.arraySize;
+	_desc.MipLevels = meta.mipLevels;
+	_desc.MiscFlags = meta.miscFlags;
+	
+		
 	if (SUCCEEDED(hr))
 	{
 

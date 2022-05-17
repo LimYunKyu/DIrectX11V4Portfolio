@@ -147,6 +147,7 @@ void Scene::RenderFinal()
 	
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->OMSetRenderTargets();
 
+	GET_SINGLE(Resources)->Get<Material>(L"Final")->GetShader()->Update();
 	GET_SINGLE(Resources)->Get<Material>(L"Final")->PushGraphicsData();
 	GET_SINGLE(Resources)->Get<Mesh>(L"Rectangle")->Render();
 }

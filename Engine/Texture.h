@@ -28,7 +28,7 @@ public:
 
 private:
 
-	ID3D11Texture2D*				_tex2D;
+	
 	D3D11_TEXTURE2D_DESC			_desc;
 
 	ScratchImage			 		_image;
@@ -36,7 +36,7 @@ private:
 	ID3D11ShaderResourceView*		_srv;
 	ID3D11RenderTargetView*			_rtv;
 	ID3D11UnorderedAccessView*		_uav;
-	
+	ID3D11Texture2D* _tex2D;
 
 
 

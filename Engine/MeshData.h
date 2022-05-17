@@ -4,6 +4,7 @@
 class Mesh;
 class Material;
 class GameObject;
+#include "Mesh.h"
 
 struct MeshRenderInfo
 {
@@ -19,6 +20,9 @@ public:
 
 public:
 	static shared_ptr<MeshData> LoadFromFBX(const wstring& path);
+	void AddAnimTake(shared_ptr<GameObject> MainGameObject);
+
+
 
 	virtual void Load(const wstring& path);
 	virtual void Save(const wstring& path);
