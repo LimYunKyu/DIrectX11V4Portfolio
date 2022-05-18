@@ -21,7 +21,7 @@ public:
 public:
 	static shared_ptr<MeshData> LoadFromFBX(const wstring& path);
 	static shared_ptr<MeshData> LoadFromFBXAnim(const wstring& path);
-	void AddAnimTake(shared_ptr<GameObject> MainGameObject);
+	void AddAnimTake(vector<shared_ptr<GameObject>>& vecObject);
 
 
 

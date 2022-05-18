@@ -41,7 +41,7 @@ void FBXLoader::LoadFbxAnim(const wstring& path)
 	Import(path);
 
 	// Animation	
-	//LoadBones(_scene->GetRootNode());
+	LoadBones(_scene->GetRootNode());
 	LoadAnimationInfo();
 
 	// 로드된 데이터 파싱 (Mesh/Material/Skin)

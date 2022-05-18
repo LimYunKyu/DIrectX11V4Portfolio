@@ -25,6 +25,7 @@ enum class KEY_TYPE
 	KEY_6 = '6',
 	KEY_7 = '7',
 	KEY_8 = '8',
+	KEY_9 = '9',
 
 	LBUTTON = VK_LBUTTON,
 	RBUTTON = VK_RBUTTON,

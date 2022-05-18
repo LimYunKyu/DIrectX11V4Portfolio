@@ -28,6 +28,9 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{6baa36b7-efa1-4684-8b58-bf71fb9e7902}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Component\Script">
+      <UniqueIdentifier>{7071399f-52f2-48dc-a0bd-2573dacb2c01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -148,6 +151,9 @@
     <ClInclude Include="InstancingBuffer.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="BladerScript.h">
+      <Filter>Object\Component\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -263,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="InstancingBuffer.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="BladerScript.cpp">
+      <Filter>Object\Component\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

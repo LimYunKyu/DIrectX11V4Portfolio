@@ -1,14 +1,12 @@
 #include "pch.h"
-#include "TestDragon.h"
+#include "BladerScript.h"
 #include "Input.h"
-#include "Animator.h"
 #include "Transform.h"
+#include "Animator.h"
 #include "Timer.h"
-#include "SceneManager.h"
 
-void TestDragon::Update()
+void BladerScript::Update()
 {
-
 
 	Vec3 _rotation = GetTransform()->GetLocalRotation();
 	if (KEY_INPUT->GetButtonDown(KEY_TYPE::KEY_1))
@@ -89,16 +87,32 @@ void TestDragon::Update()
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
 	if (KEY_INPUT->GetButton(KEY_TYPE::W))
+	{
 		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		GetAnimator()->Play(2);
+	}
+		
 
 	if (KEY_INPUT->GetButton(KEY_TYPE::S))
+	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+		GetAnimator()->Play(2);
+	}
+		
 
 	if (KEY_INPUT->GetButton(KEY_TYPE::A))
+	{
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+		GetAnimator()->Play(2);
+	}
+		
 
 	if (KEY_INPUT->GetButton(KEY_TYPE::D))
+	{
 		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
+		GetAnimator()->Play(2);
+	}
+		
 
 	/*if (KEY_INPUT->GetButton(KEY_TYPE::Q))
 	{

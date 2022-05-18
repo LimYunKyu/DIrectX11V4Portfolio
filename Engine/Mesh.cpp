@@ -72,6 +72,17 @@ shared_ptr<Mesh> Mesh::CreateFromFBX(const FbxMeshInfo* meshInfo, FBXLoader& loa
 	return mesh;
 }
 
+shared_ptr<Mesh> Mesh::CreateFromAnimFBX(const FbxMeshInfo* meshInfo, FBXLoader& loader)
+{
+	shared_ptr<Mesh> mesh = make_shared<Mesh>();
+	
+
+	if (meshInfo->hasAnimation)
+		mesh->CreateBonesAndAnimations(loader);
+
+	return mesh;
+}
+
 void Mesh::CreateVertexBuffer(const vector<Vertex>& buffer)
 {
 	_vertexCount = static_cast<uint32>(buffer.size());
@@ -214,8 +225,8 @@ void Mesh::CreateBonesAndAnimations(class FBXLoader& loader)
 			{
 				int32 keyFrameCount = static_cast<int32>(animClip.keyFrames[b].size());
 
-				if (keyFrameCount > 18)
-					keyFrameCount = 18;
+				if (keyFrameCount > animClip.frameCount)
+					keyFrameCount = animClip.frameCount;
 				for (int32 f = 0; f < keyFrameCount; f++)
 				{
 					int32 idx = static_cast<int32>(boneCount * f + b);

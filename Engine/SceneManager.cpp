@@ -22,6 +22,7 @@
 #include "DXManager.h"
 #include "BufferManager.h"
 
+#include "BladerScript.h"
 void SceneManager::Update()
 {
 	if (_activeScene == nullptr)
@@ -302,24 +303,29 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Basic_Knight_Idle.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Blader\\Man_Blader_Idle01.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		auto MainObject = gameObjects[0];
 		auto vecAnimClips =  MainObject->GetAnimator()->GetAnimClips();
-		/*shared_ptr<MeshData> OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_Run.fbx");
-		OtherData->AddAnimTake(MainObject);
-		OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_WALK.fbx");
-		OtherData->AddAnimTake(MainObject);
-		OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_SOCIAL.fbx");
-		OtherData->AddAnimTake(MainObject);
-		OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_TALK01.fbx");
-		OtherData->AddAnimTake(MainObject);
-		OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_TALK02.fbx");
-		OtherData->AddAnimTake(MainObject);
-		OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_TALK03.fbx");
-		OtherData->AddAnimTake(MainObject);*/
+		shared_ptr<MeshData> OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_Idle02.fbx");
+		OtherData->AddAnimTake(gameObjects);
+		OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_Run01.fbx");
+		OtherData->AddAnimTake(gameObjects);
+		OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_Run02.fbx");
+		OtherData->AddAnimTake(gameObjects);
+		OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_NomalAttack01.fbx");
+		OtherData->AddAnimTake(gameObjects);
+		OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_NomalAttack02.fbx");
+		OtherData->AddAnimTake(gameObjects);
+		OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_NomalAttack03.fbx");
+		OtherData->AddAnimTake(gameObjects);
+		OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_Damage01.fbx");
+		OtherData->AddAnimTake(gameObjects);
+		OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_Damage02.fbx");
+		OtherData->AddAnimTake(gameObjects);
+		
 
 		MainObject->AddChildObject(MainCamera);
 		for (auto& gameObject : gameObjects)
@@ -330,7 +336,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
 			scene->AddGameObject(gameObject);
-			gameObject->AddComponent(make_shared<TestDragon>());
+			gameObject->AddComponent(make_shared<BladerScript>());
 		}
 	}
 #pragma endregion
