@@ -82,7 +82,7 @@ public:
 
 public:
 	void LoadFbx(const wstring& path);
-
+	void LoadFbxAnim(const wstring& path);
 public:
 	int32 GetMeshCount() { return static_cast<int32>(_meshes.size()); }
 	const FbxMeshInfo& GetMesh(int32 idx) { return _meshes[idx]; }

@@ -42,6 +42,9 @@ void GameObject::Start()
 			component->Start();
 	}
 
+	if(_child)
+	_child->Start();
+
 	for (shared_ptr<MonoBehaviour>& script : _scripts)
 	{
 		script->Start();
@@ -56,6 +59,8 @@ void GameObject::Update()
 			component->Update();
 	}
 
+	if (_child)
+	_child->Update();
 	for (shared_ptr<MonoBehaviour>& script : _scripts)
 	{
 		script->Update();
@@ -70,6 +75,8 @@ void GameObject::LateUpdate()
 			component->LateUpdate();
 	}
 
+	if (_child)
+	_child->LateUpdate();
 	for (shared_ptr<MonoBehaviour>& script : _scripts)
 	{
 		script->LateUpdate();
@@ -83,6 +90,9 @@ void GameObject::FinalUpdate()
 		if (component)
 			component->FinalUpdate();
 	}
+
+	if (_child)
+	_child->FinalUpdate();
 }
 
 shared_ptr<Component> GameObject::GetFixedComponent(COMPONENT_TYPE type)
@@ -153,4 +163,12 @@ void GameObject::AddComponent(shared_ptr<Component> component)
 	{
 		_scripts.push_back(dynamic_pointer_cast<MonoBehaviour>(component));
 	}
+}
+
+void GameObject::AddChildObject(shared_ptr<GameObject> child)
+{
+	_child = child;
+
+	_child->GetTransform()->SetParent(GetTransform());
+	
 }

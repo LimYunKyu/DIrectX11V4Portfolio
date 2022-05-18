@@ -333,6 +333,21 @@ shared_ptr<MeshData> Resources::LoadFBX(const wstring& path)
 	return meshData;
 }
 
+shared_ptr<class MeshData> Resources::LoadFBXAnimData(const wstring& path)
+{
+	wstring key = path;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadFromFBXAnim(path);
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
 void Resources::CreateDefaultShader()
 {
 

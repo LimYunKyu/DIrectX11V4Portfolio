@@ -17,10 +17,16 @@ Transform::~Transform()
 
 void Transform::FinalUpdate()
 {
+
+
+
+	float radianX = XMConvertToRadians(_localRotation.x);
+	float radianY = XMConvertToRadians(_localRotation.y);
+	float radianZ = XMConvertToRadians(_localRotation.z);
 	Matrix matScale = Matrix::CreateScale(_localScale);
-	Matrix matRotation = Matrix::CreateRotationX(_localRotation.x);
-	matRotation *= Matrix::CreateRotationY(_localRotation.y);
-	matRotation *= Matrix::CreateRotationZ(_localRotation.z);
+	Matrix matRotation = Matrix::CreateRotationX(radianX);
+	matRotation *= Matrix::CreateRotationY(radianY);
+	matRotation *= Matrix::CreateRotationZ(radianZ);
 	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
 
 	_matLocal = matScale * matRotation * matTranslation;
@@ -28,7 +34,7 @@ void Transform::FinalUpdate()
 
 	shared_ptr<Transform> parent = GetParent().lock();
 	if (parent != nullptr)
-	{
+	{	
 		_matWorld *= parent->GetLocalToWorldMatrix();
 	}
 }

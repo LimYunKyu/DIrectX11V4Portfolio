@@ -35,6 +35,23 @@ void FBXLoader::LoadFbx(const wstring& path)
 	CreateMaterials();
 }
 
+void FBXLoader::LoadFbxAnim(const wstring& path)
+{
+	// 颇老 单捞磐 肺靛
+	Import(path);
+
+	// Animation	
+	//LoadBones(_scene->GetRootNode());
+	LoadAnimationInfo();
+
+	// 肺靛等 单捞磐 颇教 (Mesh/Material/Skin)
+	ParseNode(_scene->GetRootNode());
+
+	// 快府 备炼俊 嘎霸 Texture / Material 积己
+	//CreateTextures();
+	//CreateMaterials();
+}
+
 void FBXLoader::Import(const wstring& path)
 {
 	// FBX SDK 包府磊 按眉 积己

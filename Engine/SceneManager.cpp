@@ -150,18 +150,21 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 //
 //	shared_ptr<Scene> scene = make_shared<Scene>();
 //
+
+	shared_ptr<GameObject> MainCamera = nullptr;
 #pragma region Camera
 	{
-		shared_ptr<GameObject> camera = make_shared<GameObject>();
-		camera->SetName(L"Main_Camera");
-		camera->AddComponent(make_shared<Transform>());
-		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45µµ
-		camera->AddComponent(make_shared<TestCameraScript>());
-		camera->GetCamera()->SetFar(1000.f);
-		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		MainCamera = make_shared<GameObject>();
+		MainCamera->SetName(L"Main_Camera");
+		MainCamera->AddComponent(make_shared<Transform>());
+		MainCamera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45µµ
+		MainCamera->AddComponent(make_shared<TestCameraScript>());
+		MainCamera->GetCamera()->SetFar(1000.f);
+		MainCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 250, 500.f));
+		MainCamera->GetTransform()->SetLocalRotation(Vec3(15.f, 180.f, 0.f));
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
-		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
-		scene->AddGameObject(camera);
+		MainCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
+		scene->AddGameObject(MainCamera);
 	}
 #pragma endregion
 
@@ -299,21 +302,33 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_IDLE.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Basic_Knight_Idle.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		auto MainObject = gameObjects[0];
 		auto vecAnimClips =  MainObject->GetAnimator()->GetAnimClips();
-		shared_ptr<MeshData> OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_Run.fbx");
+		/*shared_ptr<MeshData> OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_Run.fbx");
 		OtherData->AddAnimTake(MainObject);
+		OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_WALK.fbx");
+		OtherData->AddAnimTake(MainObject);
+		OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_SOCIAL.fbx");
+		OtherData->AddAnimTake(MainObject);
+		OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_TALK01.fbx");
+		OtherData->AddAnimTake(MainObject);
+		OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_TALK02.fbx");
+		OtherData->AddAnimTake(MainObject);
+		OtherData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Echo_Girl_TALK03.fbx");
+		OtherData->AddAnimTake(MainObject);*/
 
+		MainObject->AddChildObject(MainCamera);
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetName(L"Dragon");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 300.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
 			scene->AddGameObject(gameObject);
 			gameObject->AddComponent(make_shared<TestDragon>());
 		}

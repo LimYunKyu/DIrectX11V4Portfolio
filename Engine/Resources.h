@@ -37,6 +37,9 @@ public:
 	shared_ptr<Texture> CreateTextureFromResource(const wstring& name, ID3D11Texture2D* tex2D);
 
 	shared_ptr<class MeshData> LoadFBX(const wstring& path);
+	shared_ptr<class MeshData> LoadFBXAnimData(const wstring& path);
+
+
 
 private:
 	void CreateDefaultShader();
