@@ -25,6 +25,8 @@ void Engine::Init(WindowInfo _info)
 	GET_SINGLE(Timer)->Init();
 	GET_SINGLE(Resources)->Init();
 	GET_SINGLE(SceneManager)->LoadScene(L"TestScene");
+
+	
 }
 
 void Engine::Update()
@@ -55,6 +57,8 @@ void Engine::Render()
 	
 
 }
+
+
 
 void Engine::CreateRenderTargetGroups()
 {

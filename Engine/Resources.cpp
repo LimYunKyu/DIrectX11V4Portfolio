@@ -345,6 +345,7 @@ shared_ptr<class MeshData> Resources::LoadFBXAnimData(const wstring& path)
 	meshData->SetName(key);
 	Add(key, meshData);
 
+	
 	return meshData;
 }
 

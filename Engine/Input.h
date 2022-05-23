@@ -29,6 +29,7 @@ enum class KEY_TYPE
 
 	LBUTTON = VK_LBUTTON,
 	RBUTTON = VK_RBUTTON,
+	WHEEL   = VK_MBUTTON,
 };
 
 enum class KEY_STATE
@@ -67,6 +68,8 @@ public:
 
 	const POINT& GetMousePos() { return _mousePos; }
 
+	bool IsAllKeyNotPress() { return _allKeyNotPress; }
+
 private:
 	inline KEY_STATE GetState(KEY_TYPE key) { return _states[static_cast<uint8>(key)]; }
 
@@ -74,5 +77,6 @@ private:
 	HWND _hwnd;
 	vector<KEY_STATE> _states;
 	POINT _mousePos = {};
+	bool  _allKeyNotPress = true;
 };
 

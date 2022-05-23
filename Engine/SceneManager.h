@@ -15,11 +15,15 @@ public:
 	void Update();
 	void Render();
 	void LoadScene(wstring sceneName);
+	void LoadData(wstring path, shared_ptr<class MeshData> data);
 
+	
 	void SetLayerName(uint8 index, const wstring& name);
 	const wstring& IndexToLayerName(uint8 index) { return _layerNames[index]; }
 	uint8 LayerNameToIndex(const wstring& name);
 
+
+	
 	shared_ptr<class GameObject> Pick(int32 screenX, int32 screenY);
 
 public:

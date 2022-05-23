@@ -5,6 +5,7 @@
 void Game::Initialize(WindowInfo info)
 {
 	GEngine->Init(info);
+	
 }
 
 void Game::Update()
@@ -13,5 +14,6 @@ void Game::Update()
 
 
 }
+
 
 

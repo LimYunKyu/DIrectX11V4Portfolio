@@ -31,6 +31,9 @@
     <Filter Include="Object\Component\Script">
       <UniqueIdentifier>{7071399f-52f2-48dc-a0bd-2573dacb2c01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager\Scene">
+      <UniqueIdentifier>{82db5ec8-1e60-4a3e-b73f-8c87f90a5dfa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -96,9 +99,6 @@
     <ClInclude Include="SceneManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Manager</Filter>
     </ClInclude>
@@ -139,19 +139,22 @@
     <ClInclude Include="Texture.h">
       <Filter>Object\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="TestCameraScript.h">
-      <Filter>Object\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="TestDragon.h">
-      <Filter>Object\Test</Filter>
-    </ClInclude>
     <ClInclude Include="FBXLoader.h">
       <Filter>Default</Filter>
     </ClInclude>
     <ClInclude Include="InstancingBuffer.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="BladerScript.h">
+    <ClInclude Include="Scene.h">
+      <Filter>Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene1.h">
+      <Filter>Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScript.h">
+      <Filter>Object\Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraHolder.h">
       <Filter>Object\Component\Script</Filter>
     </ClInclude>
   </ItemGroup>
@@ -213,9 +216,6 @@
     <ClCompile Include="Resources.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -258,19 +258,22 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Object\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="TestCameraScript.cpp">
-      <Filter>Object\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="TestDragon.cpp">
-      <Filter>Object\Test</Filter>
-    </ClCompile>
     <ClCompile Include="FBXLoader.cpp">
       <Filter>Default</Filter>
     </ClCompile>
     <ClCompile Include="InstancingBuffer.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="BladerScript.cpp">
+    <ClCompile Include="Scene.cpp">
+      <Filter>Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene1.cpp">
+      <Filter>Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScript.cpp">
+      <Filter>Object\Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraHolder.cpp">
       <Filter>Object\Component\Script</Filter>
     </ClCompile>
   </ItemGroup>
@@ -278,9 +281,6 @@
     <None Include="SimpleMath.inl">
       <Filter>Default</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Resources\Shader\animation.fx">
@@ -325,5 +325,10 @@
     <FxCompile Include="..\Resources\Shader\test.fx">
       <Filter>Shader</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc">
+      <Filter>Object\Component\Script</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

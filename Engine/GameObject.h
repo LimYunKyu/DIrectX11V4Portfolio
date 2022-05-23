@@ -11,6 +11,7 @@ class ParticleSystem;
 class Terrain;
 class BaseCollider;
 class Animator;
+class MonoBehaviour;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
@@ -35,10 +36,14 @@ public:
 	shared_ptr<BaseCollider> GetCollider();
 	shared_ptr<Animator> GetAnimator();
 
+
+
 	void AddComponent(shared_ptr<Component> component);
 
 	void SetCheckFrustum(bool checkFrustum) { _checkFrustum = checkFrustum; }
 	bool GetCheckFrustum() { return _checkFrustum; }
+	vector<shared_ptr<GameObject>>& GetChilds() { return _childs; }
+	vector<shared_ptr<MonoBehaviour>>& GetScripts() { return _scripts; }
 	void AddChildObject(shared_ptr<GameObject> child);
 
 	void SetLayerIndex(uint8 layer) { _layerIndex = layer; }
@@ -50,7 +55,7 @@ public:
 private:
 	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT> _components;
 	vector<shared_ptr<MonoBehaviour>> _scripts;
-	shared_ptr<GameObject> _child;
+	vector<shared_ptr<GameObject>> _childs;
 
 	bool _checkFrustum = true;
 	uint8 _layerIndex = 0;

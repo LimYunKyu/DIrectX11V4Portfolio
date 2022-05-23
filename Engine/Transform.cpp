@@ -7,7 +7,6 @@
 
 Transform::Transform() : Component(COMPONENT_TYPE::TRANSFORM)
 {
-
 }
 
 Transform::~Transform()
@@ -29,8 +28,11 @@ void Transform::FinalUpdate()
 	matRotation *= Matrix::CreateRotationZ(radianZ);
 	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
 
-	_matLocal = matScale * matRotation * matTranslation;
+	_matLocal = matScale* matRotation* matTranslation;
+
 	_matWorld = _matLocal;
+
+	Vec3 test = GetLook();
 
 	shared_ptr<Transform> parent = GetParent().lock();
 	if (parent != nullptr)
@@ -49,9 +51,16 @@ void Transform::PushData()
 	transformParams.matWVP = _matWorld * Camera::S_MatView * Camera::S_MatProjection;
 	transformParams.matViewInv = Camera::S_MatView.Invert();
 
+	//_centerMatrix = XMMatrixIdentity();
+
 	CONST_BUFFER(CONSTANT_BUFFER_TYPE::TRANSFORM)->PushGraphicsData(&transformParams, sizeof(transformParams));
 }
 
+
+void Transform::SetCenterMatrix(Matrix mat)
+{
+	_centerMatrix = mat;
+}
 
 void Transform::LookAt(const Vec3& dir)
 {
@@ -73,6 +82,12 @@ void Transform::LookAt(const Vec3& dir)
 	matrix.Backward(front);
 
 	_localRotation = DecomposeRotationMatrix(matrix);
+}
+
+void Transform::CalculationWorldMatrix()
+{
+
+	FinalUpdate();
 }
 
 bool Transform::CloseEnough(const float& a, const float& b, const float& epsilon)

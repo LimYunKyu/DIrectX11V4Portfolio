@@ -138,12 +138,7 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 			gameObject->AddComponent(animator);
 			animator->SetBones(info.mesh->GetBones());
 			animator->SetAnimClip(info.mesh->GetAnimClip());
-
-
-		/*	auto pAnimTakeVec = (info.mesh->GetAnimClip());
-			auto AnimTake = (*pAnimTakeVec)[0];
-			pAnimTakeVec->push_back(AnimTake);*/
-			
+		
 
 		}
 

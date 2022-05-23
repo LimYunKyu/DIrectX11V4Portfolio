@@ -32,3 +32,5 @@ shared_ptr<Animator> Component::GetAnimator()
 {
 	return _gameObject.lock()->GetAnimator();
 }
+
+

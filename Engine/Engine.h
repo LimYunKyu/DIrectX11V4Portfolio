@@ -10,6 +10,7 @@ public:
 	void Update();
 	void Render();
 
+
 private:
 	void CreateRenderTargetGroups();
 public:

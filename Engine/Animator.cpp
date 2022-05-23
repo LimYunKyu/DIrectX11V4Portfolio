@@ -19,11 +19,15 @@ Animator::~Animator()
 
 void Animator::FinalUpdate()
 {
-	_updateTime += DELTA_TIME;
+	_updateTime += (DELTA_TIME);
 
 	const AnimClipInfo& animClip = _animClips->at(_clipIndex);
 	if (_updateTime >= animClip.duration)
+	{
 		_updateTime = 0.f;
+		_animFinish = true;
+	}
+		
 
 	const int32 ratio = static_cast<int32>(animClip.frameCount / animClip.duration);
 	_frame = static_cast<int32>(_updateTime * ratio);
@@ -74,7 +78,9 @@ void Animator::Play(uint32 idx)
 {
 	if (_clipIndex == idx)
 		return;
+
 	assert(idx < _animClips->size());
 	_clipIndex = idx;
 	_updateTime = 0.f;
+	_animFinish = false;
 }

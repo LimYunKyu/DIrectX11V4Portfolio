@@ -35,6 +35,8 @@ void Input::Update()
 				state = KEY_STATE::PRESS;
 			else
 				state = KEY_STATE::DOWN;
+
+			
 		}
 		else
 		{
@@ -44,7 +46,13 @@ void Input::Update()
 			if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
 				state = KEY_STATE::UP;
 			else
+			{
 				state = KEY_STATE::NONE;
+				
+			}
+				
+
+			
 		}
 	}
 

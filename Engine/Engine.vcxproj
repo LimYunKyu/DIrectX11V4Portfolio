@@ -193,7 +193,6 @@
   <ItemGroup>
     <ClInclude Include="Animator.h" />
     <ClInclude Include="BaseCollider.h" />
-    <ClInclude Include="BladerScript.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Camera.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -201,6 +200,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="CameraHolder.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DXManager.h" />
@@ -227,6 +227,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PlayerScript.h" />
     <ClInclude Include="RenderTargetGroup.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -236,14 +237,13 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Scene1.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Terrain.h" />
-    <ClInclude Include="TestCameraScript.h" />
-    <ClInclude Include="TestDragon.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h">
@@ -256,7 +256,6 @@
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="BaseCollider.cpp" />
-    <ClCompile Include="BladerScript.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Camera.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -264,6 +263,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="CameraHolder.cpp" />
     <ClCompile Include="Component.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -299,6 +299,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PlayerScript.cpp" />
     <ClCompile Include="RenderTargetGroup.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -307,14 +308,13 @@
     </ClCompile>
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="Terrain.cpp" />
-    <ClCompile Include="TestCameraScript.cpp" />
-    <ClCompile Include="TestDragon.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp">

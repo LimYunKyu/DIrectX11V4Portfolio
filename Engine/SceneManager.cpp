@@ -11,18 +11,21 @@
 #include "Light.h"
 #include "Animator.h"
 
-#include "TestCameraScript.h"
 #include "Resources.h"
 #include "ParticleSystem.h"
 #include "Terrain.h"
 #include "SphereCollider.h"
 #include "MeshData.h"
-#include "TestDragon.h"
+
 
 #include "DXManager.h"
 #include "BufferManager.h"
 
-#include "BladerScript.h"
+
+#include "PlayerScript.h"
+#include "CameraHolder.h"
+
+
 void SceneManager::Update()
 {
 	if (_activeScene == nullptr)
@@ -31,6 +34,7 @@ void SceneManager::Update()
 	_activeScene->Update();
 	_activeScene->LateUpdate();
 	_activeScene->FinalUpdate();
+
 }
 
 // TEMP
@@ -51,6 +55,11 @@ void SceneManager::LoadScene(wstring sceneName)
 	_activeScene->Start();
 }
 
+void SceneManager::LoadData(wstring path, shared_ptr<class MeshData> data)
+{
+}
+
+
 void SceneManager::SetLayerName(uint8 index, const wstring& name)
 {
 	// 기존 데이터 삭제
@@ -69,6 +78,8 @@ uint8 SceneManager::LayerNameToIndex(const wstring& name)
 
 	return findIt->second;
 }
+
+
 
 shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 {
@@ -131,44 +142,92 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
 
-		 //UAV 용 Texture 생성
+		//UAV 용 Texture 생성
 		shared_ptr<Texture> texture = GET_SINGLE(Resources)->CreateTexture(L"UAVTexture",
-			DXGI_FORMAT_R8G8B8A8_UNORM, 1024, 1024,D3D11_BIND_UNORDERED_ACCESS, D3D11_USAGE::D3D11_USAGE_DEFAULT);
+			DXGI_FORMAT_R8G8B8A8_UNORM, 1024, 1024, D3D11_BIND_UNORDERED_ACCESS, D3D11_USAGE::D3D11_USAGE_DEFAULT);
 
 		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"ComputeShader");
 		material->SetShader(shader);
 		material->SetInt(0, 1);
 		material->SetTexture(0, texture);
-		
+
 		auto uav = texture->GetUAV();
 		material->GetShader()->Update();
 		GET_SINGLE(BufferManager)->PushComputeUAV(UAV_REGISTER::u0, uav);
-		
+
 		// 쓰레드 그룹 (1 * 1024 * 1)
 		material->Dispatch(1, 1024, 1);
 	}
 #pragma endregion
-//
-//	shared_ptr<Scene> scene = make_shared<Scene>();
-//
+	
+
+	///////////////////플레이어 OBJ 시작/////////////////////
+	///////////////////플레이어 OBJ 시작/////////////////////
+	///////////////////플레이어 OBJ 시작/////////////////////
+
 
 	shared_ptr<GameObject> MainCamera = nullptr;
+
+
 #pragma region Camera
 	{
 		MainCamera = make_shared<GameObject>();
 		MainCamera->SetName(L"Main_Camera");
 		MainCamera->AddComponent(make_shared<Transform>());
 		MainCamera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45도
-		MainCamera->AddComponent(make_shared<TestCameraScript>());
-		MainCamera->GetCamera()->SetFar(1000.f);
-		MainCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 250, 500.f));
-		MainCamera->GetTransform()->SetLocalRotation(Vec3(15.f, 180.f, 0.f));
+		MainCamera->GetCamera()->SetFar(10000.f);
+		MainCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, -800.f)); //플레이어랑 얼마나 떨어질지
+		MainCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		MainCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 		scene->AddGameObject(MainCamera);
 	}
 #pragma endregion
 
+
+
+#pragma region Player
+
+	shared_ptr<GameObject> player = make_shared<GameObject>();
+	player->SetName(L"Player");
+	player->AddComponent(make_shared<Transform>());
+	player->AddComponent(make_shared<PlayerScript>());
+	player->SetCheckFrustum(false);
+	player->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+	player->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	player->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+
+	scene->AddGameObject(player);
+
+#pragma endregion
+
+
+#pragma region CameraHolder
+
+	shared_ptr<GameObject> cameraHolder = make_shared<GameObject>();
+	cameraHolder->SetName(L"Camera_Holder");
+	cameraHolder->AddComponent(make_shared<Transform>());
+	cameraHolder->GetTransform()->SetLocalPosition(Vec3(0.f, 50.f, 0.f)); 
+	cameraHolder->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+	cameraHolder->AddComponent(make_shared<CameraHolder>());
+
+#pragma endregion
+
+
+#pragma region MeshHolder
+
+	shared_ptr<GameObject> meshHolder = make_shared<GameObject>();
+	meshHolder->SetName(L"MeshHolder");
+	meshHolder->AddComponent(make_shared<Transform>());
+	meshHolder->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f)); //플레이어랑 얼마나 떨어질지
+	meshHolder->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+
+#pragma endregion
+
+
+	///////////////////플레이어 OBJ 끝/////////////////////
+	///////////////////플레이어 OBJ 끝/////////////////////
+	///////////////////플레이어 OBJ 끝/////////////////////
 #pragma region UI_Camera
 	{
 		shared_ptr<GameObject> camera = make_shared<GameObject>();
@@ -196,7 +255,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Skybox");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\Sky01.jpg");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\Sky02.jpg");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -214,7 +273,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->AddComponent(make_shared<Transform>());
 		obj->AddComponent(make_shared<SphereCollider>());
 		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(100, 0.f, 100.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(100, 0, 0));
 		obj->SetStatic(false);
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -232,57 +291,83 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-#pragma region Terrain
-	/*{
-		shared_ptr<GameObject> obj = make_shared<GameObject>();
-		obj->AddComponent(make_shared<Transform>());
-		obj->AddComponent(make_shared<Terrain>());
-		obj->AddComponent(make_shared<MeshRenderer>());
-
-		obj->GetTransform()->SetLocalScale(Vec3(50.f, 250.f, 50.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-100.f, -200.f, 300.f));
-		obj->SetStatic(true);
-		obj->GetTerrain()->Init(64, 64);
-		obj->SetCheckFrustum(false);
-
-		scene->AddGameObject(obj);
-	}*/
-#pragma endregion
-
-#pragma region UI_Test
-	for (int32 i = 0; i < 6; i++)
+#pragma region Object
 	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
-		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		obj->SetName(L"OBJ");
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 250.f, 500.f));
+		//obj->AddComponent(make_shared<SphereCollider>());
+		obj->GetTransform()->SetLocalScale(Vec3(1000.f, 1000.f, 10.f));
+		obj->GetTransform()->SetLocalRotation(Vec3(90.f, 0.f, 0.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0, 0, 0));
+		obj->SetStatic(false);
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
+			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(sphereMesh);
 		}
 		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-
-			shared_ptr<Texture> texture;
-			if (i < 3)
-				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->GetRTTexture(i);
-			else if (i < 5)
-				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->GetRTTexture(i - 3);
-			else
-				texture = GET_SINGLE(Resources)->Get<Texture>(L"UAVTexture");
-				//texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
-
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+			meshRenderer->SetMaterial(material->Clone());
 		}
+		//dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
+		//dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
 		obj->AddComponent(meshRenderer);
 		scene->AddGameObject(obj);
 	}
 #pragma endregion
+
+#pragma region Terrain
+	//{
+	//	shared_ptr<GameObject> obj = make_shared<GameObject>();
+	//	obj->AddComponent(make_shared<Transform>());
+	//	obj->AddComponent(make_shared<Terrain>());
+	//	obj->AddComponent(make_shared<MeshRenderer>());
+
+	//	obj->GetTransform()->SetLocalScale(Vec3(50.f, 250.f, 50.f));
+	//	obj->GetTransform()->SetLocalPosition(Vec3(-100.f, -200.f, 300.f));
+	//	obj->SetStatic(true);
+	//	obj->GetTerrain()->Init(64, 64);
+	//	obj->SetCheckFrustum(false);
+
+	//	scene->AddGameObject(obj);
+	//}
+#pragma endregion
+
+//#pragma region UI_Test
+//	for (int32 i = 0; i < 6; i++)
+//	{
+//		shared_ptr<GameObject> obj = make_shared<GameObject>();
+//		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+//		obj->AddComponent(make_shared<Transform>());
+//		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+//		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 250.f, 500.f));
+//		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+//		{
+//			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+//			meshRenderer->SetMesh(mesh);
+//		}
+//		{
+//			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+//
+//			shared_ptr<Texture> texture;
+//			if (i < 3)
+//				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->GetRTTexture(i);
+//			else if (i < 5)
+//				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->GetRTTexture(i - 3);
+//			else
+//				texture = GET_SINGLE(Resources)->Get<Texture>(L"UAVTexture");
+//			//texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
+//
+//			shared_ptr<Material> material = make_shared<Material>();
+//			material->SetShader(shader);
+//			material->SetTexture(0, texture);
+//			meshRenderer->SetMaterial(material);
+//		}
+//		obj->AddComponent(meshRenderer);
+//		scene->AddGameObject(obj);
+//	}
+//#pragma endregion
 
 #pragma region Directional Light
 	{
@@ -301,6 +386,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 
+
 #pragma region FBX
 	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Blader\\Man_Blader_Idle01.fbx");
@@ -308,8 +394,12 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		auto MainObject = gameObjects[0];
-		auto vecAnimClips =  MainObject->GetAnimator()->GetAnimClips();
+		auto vecAnimClips = MainObject->GetAnimator()->GetAnimClips();
+
+
 		shared_ptr<MeshData> OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_Idle02.fbx");
+		OtherData->AddAnimTake(gameObjects);
+		OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_WeaponIn.fbx");
 		OtherData->AddAnimTake(gameObjects);
 		OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_Run01.fbx");
 		OtherData->AddAnimTake(gameObjects);
@@ -325,18 +415,29 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		OtherData->AddAnimTake(gameObjects);
 		OtherData = GET_SINGLE(Resources)->LoadFBXAnimData(L"..\\Resources\\FBX\\Blader\\Man_Blader_Damage02.fbx");
 		OtherData->AddAnimTake(gameObjects);
-		
 
-		MainObject->AddChildObject(MainCamera);
+
+
+
+
+		
+		player->AddChildObject(cameraHolder);
+		cameraHolder->AddChildObject(MainCamera);
+		player->AddChildObject(meshHolder);
+	
+	
+
 		for (auto& gameObject : gameObjects)
 		{
-			gameObject->SetName(L"Dragon");
+
+			meshHolder->AddChildObject(gameObject);
+			gameObject->SetName(L"Player");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
 			scene->AddGameObject(gameObject);
-			gameObject->AddComponent(make_shared<BladerScript>());
+
 		}
 	}
 #pragma endregion
